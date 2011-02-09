@@ -12,7 +12,7 @@
 
 	<target name="build" depends="_build-prepare">
 		<copy todir="${build.dir.target}/usr/share/mcollective/plugins/mcollective/agent" overwrite="true">
-			<fileset dir="${project.basedir}">
+			<fileset dir="${project.basedir}/src/">
 				<include name="registration.rb" />
 			</fileset>
 		</copy>
