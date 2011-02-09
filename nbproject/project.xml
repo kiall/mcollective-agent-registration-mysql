@@ -4,7 +4,9 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/ruby-project/1">
             <name>mcollective-agent-registration-mysql</name>
-            <source-roots/>
+            <source-roots>
+                <root id="src.src.dir"/>
+            </source-roots>
             <test-roots/>
         </data>
     </configuration>
