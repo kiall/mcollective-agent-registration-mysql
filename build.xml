@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="mcollective-agent-registration-mysql" basedir="." default="main">
+	<property file="build.properties" />
+	<import file="build/common/build.xml" />
+	
+
+	<target name="package" depends="build">
+		<!-- Choose which packagers you want -->
+		<phingcall target="package-zip" />
+		<phingcall target="package-deb" />
+	</target>
+
+	<target name="build" depends="_build-prepare">
+		<copy todir="${build.dir.target}/usr/share/mcollective/plugins/mcollective/agent" overwrite="true">
+			<fileset dir="${project.basedir}">
+				<include name="registration.rb" />
+			</fileset>
+		</copy>
+<!--		<copy todir="${build.dir.target}/usr/lib/nagios/plugins/" overwrite="true">
+			<fileset dir="${project.basedir}/agent/registration-mysql/">
+				<include name="check_mcollective.rb" />
+			</fileset>
+		</copy>-->
+	</target>
+</project>
