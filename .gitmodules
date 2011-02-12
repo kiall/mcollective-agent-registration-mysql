@@ -1,3 +1,0 @@
-[submodule "build/common"]
-	path = build/common
-	url = https://github.com/phostr/phing-build-common.git
