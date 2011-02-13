@@ -1,0 +1,15 @@
+Source: mcollective-agent-registration-mysql
+Section: utils
+Priority: extra
+Maintainer: Kiall Mac Innes <kiall@managedit.ie>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.0
+Homepage: https://github.com/kiall/mcollective-agent-registration-mysql
+Vcs-Git: https://github.com/kiall/mcollective-agent-registration-mysql.git
+Vcs-Browser: https://github.com/kiall/mcollective-agent-registration-mysql
+
+Package: mcollective-plugin-agent-registration-mysql
+Architecture: all
+Depends: ruby (>= 1.8.1), mcollective-common (>= 1.1.0), ${misc:Depends}
+Description: MCollective Registration MySQL Agent
+ This is a simple mysql registration agent for mcollective.

@@ -1,0 +1,5 @@
+mcollective-agent-registration-mysql (0.0.1-0) mcollective; urgency=low
+
+  * Initial Debian Packaging
+
+ -- Kiall Mac Innes <kiall@managedit.ie>  Fri, 11 Feb 2011 06:58:34 +0000
