@@ -16,16 +16,10 @@ PROJ_FILES = ["src", "README.md", "doc", "ext"]
 PKG_MAINT_NAME = "Kiall Mac Innes"
 PKG_MAINT_EMAIL = "kiall@managedit.ie"
 
-PKG_DEB_DISTRIBUTION = "phostr"
-
-if ENV['RELEASE_STAGE'] then
-    PKG_DEB_DUPLOAD = "apt.phostr.net-" + ENV['RELEASE_STAGE']
-else
-    PKG_DEB_DUPLOAD = "apt.phostr.net-development"
-end
-
 # End Per Project Settings
 
+ENV['DEB_RELEASE_TO'] ? PKG_DEB_DUPLOAD = ENV['DEB_RELEASE_TO'] : PKG_DEB_DUPLOAD = nil
+ENV['DEB_DISTRIBUTION'] ? PKG_DEB_DISTRIBUTION = ENV['DEB_DISTRIBUTION'] : PKG_DEB_DISTRIBUTION = "unstable"
 ENV["BUILD_NUMBER"] ? CURRENT_RELEASE = ENV["BUILD_NUMBER"] : CURRENT_RELEASE = PROJ_RELEASE
 ENV["PKG_VERSION"] ? CURRENT_VERSION = ENV["PKG_VERSION"] : CURRENT_VERSION = PROJ_VERSION
 
@@ -111,6 +105,38 @@ namespace :package do
             safe_system %{cp *.deb *.build *.changes ..}
         end
     end
+
+#    desc "Create RPM packages"
+#    task :rpm => [:clean, :doc, :package] do
+#        announce("Building RPM for #{PROJ_NAME}-#{CURRENT_VERSION}-#{CURRENT_RELEASE}")
+#
+#        sourcedir = `rpm --eval '%_sourcedir'`.chomp
+#        specsdir = `rpm --eval '%_specdir'`.chomp
+#        srpmsdir = `rpm --eval '%_srcrpmdir'`.chomp
+#        rpmdir = `rpm --eval '%_rpmdir'`.chomp
+#        lsbdistrel = `lsb_release -r -s | cut -d . -f1`.chomp
+#        lsbdistro = `lsb_release -i -s`.chomp
+#
+#        case lsbdistro
+#            when 'CentOS'
+#                rpmdist = ".el#{lsbdistrel}"
+#            else
+#                rpmdist = ""
+#        end
+#
+#        safe_system %{cp build/#{PROJ_NAME}-#{CURRENT_VERSION}.tgz #{sourcedir}}
+#        safe_system %{cat #{PROJ_NAME}.spec|sed -e s/%{rpm_release}/#{CURRENT_RELEASE}/g | sed -e s/%{version}/#{CURRENT_VERSION}/g > #{specsdir}/#{PROJ_NAME}.spec}
+#
+#        if ENV['SIGNED'] == '1'
+#            safe_system %{rpmbuild --sign -D 'version #{CURRENT_VERSION}' -D 'rpm_release #{CURRENT_RELEASE}' -D 'dist #{rpmdist}' -D 'use_lsb 0' -ba #{PROJ_NAME}.spec}
+#        else
+#            safe_system %{rpmbuild -D 'version #{CURRENT_VERSION}' -D 'rpm_release #{CURRENT_RELEASE}' -D 'dist #{rpmdist}' -D 'use_lsb 0' -ba #{PROJ_NAME}.spec}
+#        end
+#
+#        safe_system %{cp #{srpmsdir}/#{PROJ_NAME}-#{CURRENT_VERSION}-#{CURRENT_RELEASE}#{rpmdist}.src.rpm build/}
+#
+#        safe_system %{cp #{rpmdir}/*/#{PROJ_NAME}*-#{CURRENT_VERSION}-#{CURRENT_RELEASE}#{rpmdist}.*.rpm build/}
+#    end
 end
 
 namespace :publish do
@@ -118,7 +144,7 @@ namespace :publish do
     task :deb do
         announce("Publishing debian packages")
 
-        raise RuntimeError, "dupload target not specified in Rakefile" unless PKG_DEB_DUPLOAD
+	raise RuntimeError, "dupload target not specified in Rakefile" unless PKG_DEB_DUPLOAD
 
         Dir.chdir("build/deb") do
             safe_system %{dput #{PKG_DEB_DUPLOAD} #{PROJ_NAME}_#{CURRENT_VERSION}-#{CURRENT_RELEASE}_*.changes}
